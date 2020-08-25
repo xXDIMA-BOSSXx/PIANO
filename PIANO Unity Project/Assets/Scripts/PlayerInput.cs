@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerInput : MonoBehaviour
 {
-    public bool playNote;
+    [HideInInspector]
     public bool release;
    
 
@@ -17,7 +17,8 @@ public class PlayerInput : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit))
             {
-                hit.transform.GetComponent<Note>().PlayNote();
+                if(hit.transform.CompareTag("Key"))
+                    hit.transform.GetComponent<Note>().PlayNote();
                 Debug.Log(hit.transform.name);
             }
         }
