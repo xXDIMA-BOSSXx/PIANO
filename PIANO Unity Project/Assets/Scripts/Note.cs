@@ -5,13 +5,15 @@ using UnityEngine;
 public class Note : MonoBehaviour
 {
 
-    public AudioSource note;
-    public AudioSource tempAudio;
-    PlayerInput input;
+    [HideInInspector] public string pitch;
+    [HideInInspector] public AudioSource note;
+    [HideInInspector] public AudioSource tempAudio;
+    [HideInInspector] PlayerInput input;
 
     // Start is called before the first frame update
     void Start()
     {
+        pitch = gameObject.name;
         input = FindObjectOfType<PlayerInput>();
         note = GetComponentInChildren<AudioSource>();
     }
@@ -19,6 +21,7 @@ public class Note : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
         if (input.release)
         {
             if(GetComponentsInChildren<AudioSource>() != null)
@@ -27,6 +30,7 @@ public class Note : MonoBehaviour
               source.volume -= Time.deltaTime * 1.65f;
             }
         }
+        
     }
 
     public void PlayNote()
@@ -38,5 +42,20 @@ public class Note : MonoBehaviour
         tempAudio.Play();
         Destroy(tempAudio.gameObject, tempAudio.clip.length);
       
+    }
+    public IEnumerator PlayTimedNote(float time)
+    {
+        note.volume = 1f;
+        tempAudio = Instantiate(note, transform);
+        tempAudio.clip = note.clip;
+        tempAudio.Play();
+        Destroy(tempAudio.gameObject, tempAudio.clip.length);
+        Debug.Log("Before");
+        yield return new WaitForEndOfFrame();
+        input.release = false;
+        yield return new WaitForSeconds(time);
+        Debug.Log("after");
+        input.release = true;
+
     }
 }

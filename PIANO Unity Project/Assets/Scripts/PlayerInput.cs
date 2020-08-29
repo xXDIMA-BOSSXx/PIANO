@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class PlayerInput : MonoBehaviour
 {
-    [HideInInspector]
-    public bool release;
+    //[HideInInspector]
+    public bool release = true;
    
 
     void Update()
