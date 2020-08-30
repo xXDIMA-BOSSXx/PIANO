@@ -13,7 +13,7 @@ public class Piano : MonoBehaviour
     [HideInInspector] public GameManager gameManager;
     [HideInInspector] public PianoGameManager pianoGameManager;
     public bool interactedPiano;
-    public bool gameStarted;
+    public bool pianoGameStarted;
     
     // Start is called before the first frame update
     void Start()
@@ -51,9 +51,9 @@ public class Piano : MonoBehaviour
             Debug.Log("SIT ON PIANO with your fat ass!");
         }
 
-        if (interactedPiano && !gameStarted)
+        if (interactedPiano && !pianoGameStarted)
         {
-            gameStarted = true;
+            pianoGameStarted = true;
             pianoGameManager.StartPianoGame(this);
             
         }
@@ -62,10 +62,12 @@ public class Piano : MonoBehaviour
             interactedPiano = false;
             gameManager.freemode = true;
 
+            playerCam.tag = "MainCamera";
             playerCam.gameObject.SetActive(true);
+
             pianoCam.tag = "Untagged";
             pianoCam.gameObject.SetActive(false);
-            playerCam.tag = "MainCamera";
+            pianoGameStarted = false;
             //player.gameObject.SetActive(true);
             Debug.Log("Player doesnT want to praactice.");
         }
@@ -94,6 +96,19 @@ public class Piano : MonoBehaviour
 
             }
         }
+    }
+
+    public Note GetNote(string note)
+    {
+        for (int i = 0; i < Notes.Length; i++)
+        {
+            if (Notes[i].pitch == note)
+            {
+                return Notes[i];
+
+            }
+        }
+        Debug.Log("CouldnT find Note :("); return null;
     }
 
 }

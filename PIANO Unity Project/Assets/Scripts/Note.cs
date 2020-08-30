@@ -4,18 +4,26 @@ using UnityEngine;
 
 public class Note : MonoBehaviour
 {
-
+    public GameObject selectedKey;
+    public GameObject demandingKey;
     [HideInInspector] public string pitch;
     [HideInInspector] public AudioSource note;
     [HideInInspector] public AudioSource tempAudio;
     [HideInInspector] PlayerInput input;
+    public bool wasPlayed;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
+        selectedKey.SetActive(false);
+        demandingKey.SetActive(false);
         pitch = gameObject.name;
         input = FindObjectOfType<PlayerInput>();
         note = GetComponentInChildren<AudioSource>();
+    }
+    // Start is called before the first frame update
+    void Start()
+    {
+        
     }
 
     // Update is called once per frame
@@ -30,6 +38,10 @@ public class Note : MonoBehaviour
               source.volume -= Time.deltaTime * 1.65f;
             }
         }
+        if(wasPlayed)
+        {
+            wasPlayed = false;
+        }
         
     }
 
@@ -41,6 +53,8 @@ public class Note : MonoBehaviour
         tempAudio.clip = note.clip;
         tempAudio.Play();
         Destroy(tempAudio.gameObject, tempAudio.clip.length);
+        demandingKey.SetActive(false);
+        wasPlayed = true;
       
     }
     public IEnumerator PlayTimedNote(float time)

@@ -9,6 +9,7 @@ public class PianoGameManager : MonoBehaviour
     public GameObject TechniqueUI;
     private Piano piano;
     private GameObject[] pianoKeys;
+    
 
     private void Start()
     {
@@ -35,9 +36,11 @@ public class PianoGameManager : MonoBehaviour
         Debug.Log("I learn technique");
         PianoGameUI.SetActive(false);
         TechniqueUI.SetActive(false);
-        piano.PlayKey("C2", 5f);
-        piano.PlayKey("E2", 5f);
-        piano.PlayKey("G2", 5f);
+
+        piano.PlayKey("C2", 1f);
+        piano.PlayKey("E2", 2f);
+        piano.PlayKey("G2", 1f);
+        StartCoroutine(DemandRandomKeys(30, 30, 60));
 
 
     }
@@ -49,6 +52,21 @@ public class PianoGameManager : MonoBehaviour
     {
         Debug.Log("I learn pieces");
     }
+    public void DemandKey(Note demandKey)
+    {
+        demandKey.demandingKey.SetActive(true);
+    }
+    public IEnumerator DemandRandomKeys(int amount, int min, int max)
+    {
+        for (int i = 0; i < amount; i++)
+        {
+            int x = Random.Range(min, max + 1);
+            DemandKey(piano.Notes[x]);
+            yield return new WaitUntil(() => piano.Notes[x].wasPlayed);
 
-    
+        }
+    }
+   
+
+
 }
