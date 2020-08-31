@@ -9,10 +9,12 @@ public class PianoGameManager : MonoBehaviour
     public GameObject TechniqueUI;
     private Piano piano;
     private GameObject[] pianoKeys;
+    private GameManager gameManager;
     
 
     private void Start()
     {
+        gameManager = FindObjectOfType<GameManager>();
         PianoGameUI.SetActive(false);
         TechniqueUI.SetActive(false);
     }
@@ -20,7 +22,12 @@ public class PianoGameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-       
+        if (gameManager.freemode)
+        {
+            PianoGameUI.SetActive(false);
+            TechniqueUI.SetActive(false);
+            
+        }
     }
 
     public void StartPianoGame(Piano _piano)
@@ -63,7 +70,21 @@ public class PianoGameManager : MonoBehaviour
             int x = Random.Range(min, max + 1);
             DemandKey(piano.Notes[x]);
             yield return new WaitUntil(() => piano.Notes[x].wasPlayed);
+            piano.Notes[x].demandingKey.SetActive(false);
+            piano.Notes[x].selectedKey.SetActive(true);
+            yield return new WaitForSeconds(.5f);
+            piano.Notes[x].selectedKey.SetActive(false);
+        }
+        
+    }
 
+    public void StopPianoGame()
+    {
+        StopAllCoroutines();
+        for (int i = 0; i < piano.Notes.Length; i++)
+        {
+            piano.Notes[i].demandingKey.SetActive(false);
+            piano.Notes[i].selectedKey.SetActive(false);
         }
     }
    

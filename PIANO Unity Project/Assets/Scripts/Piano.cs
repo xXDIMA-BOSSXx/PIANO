@@ -9,7 +9,6 @@ public class Piano : MonoBehaviour
     public EnterZone enterZone;
     public GameObject player;
     public Camera pianoCam;
-    [HideInInspector] public Camera playerCam;
     [HideInInspector] public GameManager gameManager;
     [HideInInspector] public PianoGameManager pianoGameManager;
     public bool interactedPiano;
@@ -20,7 +19,6 @@ public class Piano : MonoBehaviour
     {
         gameManager = FindObjectOfType<GameManager>();
         pianoGameManager = gameManager.GetComponent<PianoGameManager>();
-        playerCam = Camera.main;
         
         for (int i = 0; i < Keys.Length; i++)
         {
@@ -41,8 +39,7 @@ public class Piano : MonoBehaviour
             //Player interacts with Piano
             interactedPiano = true;
             gameManager.freemode = false;
-            playerCam.tag = "Untagged";
-            playerCam.gameObject.SetActive(false);
+            
 
             pianoCam.gameObject.SetActive(true);
             pianoCam.tag = "MainCamera";
@@ -62,9 +59,7 @@ public class Piano : MonoBehaviour
             interactedPiano = false;
             gameManager.freemode = true;
 
-            playerCam.tag = "MainCamera";
-            playerCam.gameObject.SetActive(true);
-
+            pianoGameManager.StopPianoGame();
             pianoCam.tag = "Untagged";
             pianoCam.gameObject.SetActive(false);
             pianoGameStarted = false;

@@ -38,11 +38,6 @@ public class Note : MonoBehaviour
               source.volume -= Time.deltaTime * 1.65f;
             }
         }
-        if(wasPlayed)
-        {
-            wasPlayed = false;
-        }
-        
     }
 
     public void PlayNote()
@@ -55,7 +50,7 @@ public class Note : MonoBehaviour
         Destroy(tempAudio.gameObject, tempAudio.clip.length);
         demandingKey.SetActive(false);
         wasPlayed = true;
-      
+        Invoke("WasPlayed", .5f);
     }
     public IEnumerator PlayTimedNote(float time)
     {
@@ -71,5 +66,9 @@ public class Note : MonoBehaviour
         Debug.Log("after");
         input.release = true;
 
+    }
+    void WasPlayed()
+    {
+        wasPlayed = false;
     }
 }
