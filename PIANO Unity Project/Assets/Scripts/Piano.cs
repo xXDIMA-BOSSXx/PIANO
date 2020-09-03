@@ -23,6 +23,8 @@ public class Piano : MonoBehaviour
         for (int i = 0; i < Keys.Length; i++)
         {
             Notes[i] = Keys[i].GetComponent<Note>();
+            Notes[i].index = i;
+            //Debug.Log(Notes[i].pitch + " " + Notes[i].index + " " + i);
         }
     }
 
@@ -45,7 +47,7 @@ public class Piano : MonoBehaviour
             pianoCam.tag = "MainCamera";
             
             //player.gameObject.SetActive(false);
-            Debug.Log("SIT ON PIANO with your fat ass!");
+            //SIT ON PIANO with your fat ass!
         }
 
         if (interactedPiano && !pianoGameStarted)
@@ -64,21 +66,14 @@ public class Piano : MonoBehaviour
             pianoCam.gameObject.SetActive(false);
             pianoGameStarted = false;
             //player.gameObject.SetActive(true);
-            Debug.Log("Player doesnT want to praactice.");
+            //Player doesnT want to praactice
         }
     }
 
-    public void PlayKey(string note)
+   
+    public void PlayKey(int noteIndex, float time)
     {
-        for (int i = 0; i < Notes.Length; i++)
-        {
-            if(Notes[i].pitch == note)
-            {
-                Notes[i].StartCoroutine("PlayTimedNote", .5f);
-                Debug.Log("LLLLL");
-
-            }
-        }
+         Notes[noteIndex].StartCoroutine("PlayTimedNote", time);
     }
     public void PlayKey(string note, float time)
     {
@@ -104,6 +99,19 @@ public class Piano : MonoBehaviour
             }
         }
         Debug.Log("CouldnT find Note :("); return null;
+    }
+    public int GetNoteIndex(string note)
+    {
+        for (int i = 0; i < Notes.Length; i++)
+        {
+            if (Notes[i].pitch == note)
+            {
+                return i;
+
+            }
+        }
+        Debug.Log("CouldnT find NoteIndex :(");
+        return 0;
     }
 
 }

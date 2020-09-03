@@ -10,6 +10,7 @@ public class Note : MonoBehaviour
     [HideInInspector] public AudioSource note;
     [HideInInspector] public AudioSource tempAudio;
     [HideInInspector] PlayerInput input;
+    public int index;
     public bool wasPlayed;
 
     private void Awake()
