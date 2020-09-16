@@ -20,11 +20,10 @@ public class Piano : MonoBehaviour
         player = FindObjectOfType<Player>();
         gameManager = FindObjectOfType<GameManager>();
         pianoGameManager = gameManager.GetComponent<PianoGameManager>();
+        
     }
     void Start()
     {
-        
-        
         for (int i = 0; i < Keys.Length; i++)
         {
             Notes[i] = Keys[i].GetComponent<Note>();
