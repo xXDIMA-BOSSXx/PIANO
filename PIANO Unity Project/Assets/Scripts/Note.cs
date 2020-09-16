@@ -60,11 +60,9 @@ public class Note : MonoBehaviour
         tempAudio.clip = note.clip;
         tempAudio.Play();
         Destroy(tempAudio.gameObject, tempAudio.clip.length);
-        Debug.Log("Before");
         yield return new WaitForEndOfFrame();
         input.release = false;
         yield return new WaitForSeconds(time);
-        Debug.Log("after");
         input.release = true;
 
     }

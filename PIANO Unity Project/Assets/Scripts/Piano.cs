@@ -7,18 +7,23 @@ public class Piano : MonoBehaviour
     public GameObject[] Keys = new GameObject[88];
     [HideInInspector] public Note[] Notes = new Note[88];
     public EnterZone enterZone;
-    public GameObject player;
+    public Player player;
     public Camera pianoCam;
     [HideInInspector] public GameManager gameManager;
     [HideInInspector] public PianoGameManager pianoGameManager;
     public bool interactedPiano;
     public bool pianoGameStarted;
-    
+
     // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
+        player = FindObjectOfType<Player>();
         gameManager = FindObjectOfType<GameManager>();
         pianoGameManager = gameManager.GetComponent<PianoGameManager>();
+    }
+    void Start()
+    {
+        
         
         for (int i = 0; i < Keys.Length; i++)
         {

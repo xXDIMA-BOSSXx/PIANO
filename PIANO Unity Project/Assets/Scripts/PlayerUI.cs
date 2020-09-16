@@ -1,12 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class Player : MonoBehaviour
+public class PlayerUI : MonoBehaviour
 {
-    public Camera playerCamera;
-    public GameObject GFX;
-    public PlayerUI PlayerUI;
+    public GameObject PlayerCanvas;
+    public Image PlayerProgressBar;
     private GameManager gameManager;
 
     private void Awake()
@@ -16,14 +16,12 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        PlayerProgressBar.fillAmount = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        PlayerProgressBar.fillAmount = StatsManager.technique;
     }
-
-    
 }

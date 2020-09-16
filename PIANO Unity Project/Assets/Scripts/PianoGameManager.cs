@@ -10,11 +10,14 @@ public class PianoGameManager : MonoBehaviour
     private Piano piano;
     private GameObject[] pianoKeys;
     private GameManager gameManager;
-    
 
-    private void Start()
+    private void Awake()
     {
         gameManager = FindObjectOfType<GameManager>();
+    }
+    private void Start()
+    {
+        
         PianoGameUI.SetActive(false);
         TechniqueUI.SetActive(false);
     }
@@ -53,20 +56,43 @@ public class PianoGameManager : MonoBehaviour
         yield return new WaitUntil(() => piano.Notes[index].wasPlayed);
         Debug.Log("OK LETS GO");
 
-        // GOING UP CHROMATICALLY
+        // GOING UP
         for (int i = 1; i < 13; i++)
         {
-            int random = Random.Range(1, 5);
+            switch (i)
+            {
+                case 1:
+                    i++;
+                    break;
+                case 3:
+                    i++;
+                    break;
+                case 6:
+                    i++;
+                    break;
+                case 8:
+                    i++;
+                    break;
+                case 10:
+                    i++;
+                    break;
+            } // MajorScale
+
+            int random = Random.Range(1,3);
             if(random == 1)
             {
-                yield return new WaitForSeconds(1f);
+                yield return new WaitForSeconds(.7f);
                 StartCoroutine(DemandNote(index + i));
                 yield return new WaitUntil(() => piano.Notes[index + i].wasPlayed);
+                StatsManager.technique += .25f;
+                PlayerPrefs.SetFloat("technique", StatsManager.technique);
             }
             else
             {
-                yield return new WaitForSeconds(1f);
-                piano.PlayKey(index + i, 1f);
+                yield return new WaitForSeconds(.7f);
+                piano.PlayKey(index + i, .5f);
+                StatsManager.technique += .02f;
+                PlayerPrefs.SetFloat("technique", StatsManager.technique);
             }
         }
         Debug.Log("FINISCH");
