@@ -10,6 +10,8 @@ public class PianoGameManager : MonoBehaviour
     private Piano piano;
     private GameObject[] pianoKeys;
     private GameManager gameManager;
+    public int rightNoteIndex;
+    public bool checkWrongNote;
 
     private void Awake()
     {
@@ -29,8 +31,13 @@ public class PianoGameManager : MonoBehaviour
         {
             PianoGameUI.SetActive(false);
             TechniqueUI.SetActive(false);
-            
         }
+        if(piano != null)
+        {
+            if(checkWrongNote)
+            CheckWrongNote();
+        }
+        
     }
 
     public void StartPianoGame(Piano _piano)
@@ -39,6 +46,22 @@ public class PianoGameManager : MonoBehaviour
         TechniqueUI.SetActive(true);
         piano = _piano;
     
+    }
+    public void CheckWrongNote()
+    {
+        for (int i = 0; i < piano.Notes.Length; i++)
+        {
+            if (piano.Notes[i].wasPlayed && i != rightNoteIndex && checkWrongNote)
+            {
+                checkWrongNote = false;
+                Invoke("SetWrongCheck", 1f);
+                StopPianoGame();
+            }
+        }
+    }
+    private void SetWrongCheck()
+    {
+        checkWrongNote = true;
     }
 
     public void LearnTechnique()
@@ -52,9 +75,9 @@ public class PianoGameManager : MonoBehaviour
     private IEnumerator _LearnTechnique()
     {
         int index = piano.GetNoteIndex("C5");
+        rightNoteIndex = index;
         StartCoroutine(DemandNote(index));
         yield return new WaitUntil(() => piano.Notes[index].wasPlayed);
-        Debug.Log("OK LETS GO");
 
         // GOING UP
         for (int i = 1; i < 13; i++)
@@ -81,26 +104,31 @@ public class PianoGameManager : MonoBehaviour
             int random = Random.Range(1,3);
             if(random == 1)
             {
+                //player plays key
                 yield return new WaitForSeconds(.7f);
                 StartCoroutine(DemandNote(index + i));
+                rightNoteIndex = index + i;
                 yield return new WaitUntil(() => piano.Notes[index + i].wasPlayed);
                 StatsManager.technique += .25f;
                 PlayerPrefs.SetFloat("technique", StatsManager.technique);
             }
             else
             {
+                //automatic key playing
                 yield return new WaitForSeconds(.7f);
                 piano.PlayKey(index + i, .5f);
                 StatsManager.technique += .02f;
                 PlayerPrefs.SetFloat("technique", StatsManager.technique);
             }
         }
-        Debug.Log("FINISCH");
+       
 
     }
     public void FreePlay()
     {
         Debug.Log("I learn free");
+        PianoGameUI.SetActive(false);
+        TechniqueUI.SetActive(false);
     }
     public void LearnPieces()
     {

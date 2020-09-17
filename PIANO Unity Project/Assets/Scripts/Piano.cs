@@ -36,6 +36,7 @@ public class Piano : MonoBehaviour
     void Update()
     {
         EnterZoneInput();
+        
     }
 
     public void EnterZoneInput()
@@ -91,6 +92,8 @@ public class Piano : MonoBehaviour
             }
         }
     }
+
+    
 
     public Note GetNote(string note)
     {

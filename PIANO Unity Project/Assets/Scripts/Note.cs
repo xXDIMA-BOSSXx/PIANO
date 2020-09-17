@@ -62,7 +62,9 @@ public class Note : MonoBehaviour
         Destroy(tempAudio.gameObject, tempAudio.clip.length);
         yield return new WaitForEndOfFrame();
         input.release = false;
+        selectedKey.SetActive(true);
         yield return new WaitForSeconds(time);
+        selectedKey.SetActive(false);
         input.release = true;
 
     }
