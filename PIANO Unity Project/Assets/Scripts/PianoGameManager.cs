@@ -11,7 +11,7 @@ public class PianoGameManager : MonoBehaviour
     private GameObject[] pianoKeys;
     private GameManager gameManager;
     public int rightNoteIndex;
-    public bool checkWrongNote;
+    public bool checkWrongNote = true;
 
     private void Awake()
     {
@@ -19,7 +19,7 @@ public class PianoGameManager : MonoBehaviour
     }
     private void Start()
     {
-        
+        checkWrongNote = true;
         PianoGameUI.SetActive(false);
         TechniqueUI.SetActive(false);
     }
@@ -53,6 +53,7 @@ public class PianoGameManager : MonoBehaviour
         {
             if (piano.Notes[i].wasPlayed && i != rightNoteIndex && checkWrongNote)
             {
+                Debug.Log("FALSE NOTWE");
                 checkWrongNote = false;
                 Invoke("SetWrongCheck", 1f);
                 StopPianoGame();
@@ -69,19 +70,29 @@ public class PianoGameManager : MonoBehaviour
         Debug.Log("I learn technique");
         PianoGameUI.SetActive(false);
         TechniqueUI.SetActive(false);
-        StartCoroutine(_LearnTechnique());
-        
-    }
-    private IEnumerator _LearnTechnique()
-    {
-        int index = piano.GetNoteIndex("C5");
-        rightNoteIndex = index;
-        StartCoroutine(DemandNote(index));
-        yield return new WaitUntil(() => piano.Notes[index].wasPlayed);
-
-        // GOING UP
-        for (int i = 1; i < 13; i++)
+        int rand = Random.Range(1, 3);
+        if(rand == 1)
         {
+            StartCoroutine(MajorScaleUp());
+        }
+        else if(rand == 2)
+        {
+            StartCoroutine(MajorScaleDown());
+        }
+
+
+    }
+    private IEnumerator MajorScaleUp()
+    {
+        yield return new WaitForSeconds(.7f); // waiting in case playing again
+        int index = piano.GetRandomNoteIndexBetween("G3", "G5"); // from G3 to G5 possible range
+        rightNoteIndex = index; //wrong note means fail start again
+        StartCoroutine(DemandNote(index)); // play first note
+        yield return new WaitUntil(() => piano.Notes[index].wasPlayed);
+        
+        for (int i = 1; i < 13; i++) // GOING UP
+        {
+            // MajorScale
             switch (i)
             {
                 case 1:
@@ -99,9 +110,8 @@ public class PianoGameManager : MonoBehaviour
                 case 10:
                     i++;
                     break;
-            } // MajorScale
-
-            int random = Random.Range(1,3);
+            } // skip notes that are not major scale
+            int random = Random.Range(1,3); // choose if player or automatic playing for each note
             if(random == 1)
             {
                 //player plays key
@@ -121,9 +131,62 @@ public class PianoGameManager : MonoBehaviour
                 PlayerPrefs.SetFloat("technique", StatsManager.technique);
             }
         }
-       
+        LearnTechnique();
 
     }
+    private IEnumerator MajorScaleDown()
+    {
+        yield return new WaitForSeconds(.7f); // waiting in case playing again
+        int index = piano.GetRandomNoteIndexBetween("G4", "G6"); // possible range
+        rightNoteIndex = index; //wrong note means fail start again
+        StartCoroutine(DemandNote(index)); // play first note
+        yield return new WaitUntil(() => piano.Notes[index].wasPlayed);
+
+        for (int i = 1; i < 13; i++) // GOING DOWN
+        {
+            // MajorScale
+            switch (i)
+            {
+                case 2:
+                    i++;
+                    break;
+                case 4:
+                    i++;
+                    break;
+                case 6:
+                    i++;
+                    break;
+                case 9:
+                    i++;
+                    break;
+                case 11:
+                    i++;
+                    break;
+            } // skip notes that are not major scale
+            int random = Random.Range(1, 3); // choose if player or automatic playing for each note
+            if (random == 1)
+            {
+                //player plays key
+                yield return new WaitForSeconds(.7f);
+                StartCoroutine(DemandNote(index - i));
+                rightNoteIndex = index - i;
+                yield return new WaitUntil(() => piano.Notes[index - i].wasPlayed);
+                StatsManager.technique += .25f;
+                PlayerPrefs.SetFloat("technique", StatsManager.technique);
+            }
+            else
+            {
+                //automatic key playing
+                yield return new WaitForSeconds(.7f);
+                piano.PlayKey(index - i, .5f);
+                StatsManager.technique += .02f;
+                PlayerPrefs.SetFloat("technique", StatsManager.technique);
+            }
+        }
+        LearnTechnique();
+
+    }
+
     public void FreePlay()
     {
         Debug.Log("I learn free");
@@ -134,7 +197,7 @@ public class PianoGameManager : MonoBehaviour
     {
         Debug.Log("I learn pieces");
     }
-
+    // visual demand or selected key
     public void SetDemandKey(Note demandKey)
     {
         if (demandKey.selectedKey.activeSelf)
@@ -143,7 +206,6 @@ public class PianoGameManager : MonoBehaviour
         }
         demandKey.demandingKey.SetActive(true);
     }
-
     public void SetSelectKey(Note selectKey)
     {
         if (selectKey.demandingKey.activeSelf)
@@ -153,6 +215,7 @@ public class PianoGameManager : MonoBehaviour
         selectKey.selectedKey.SetActive(true);
     }
 
+    // demand notes
     public IEnumerator DemandRandomKeys(int amount, int min, int max)
     {
         for (int i = 0; i < amount; i++)

@@ -3888,6 +3888,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PianoGameUI: {fileID: 1808325227}
   TechniqueUI: {fileID: 1200316493}
+  rightNoteIndex: 0
+  checkWrongNote: 0
 --- !u!114 &1607541742
 MonoBehaviour:
   m_ObjectHideFlags: 0
