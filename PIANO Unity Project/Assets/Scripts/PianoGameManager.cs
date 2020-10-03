@@ -47,7 +47,7 @@ public class PianoGameManager : MonoBehaviour
         piano = _piano;
     
     }
-    public void CheckWrongNote()
+    public void CheckWrongNote() //Restart if wrong note is played
     {
         for (int i = 0; i < piano.Notes.Length; i++)
         {
@@ -60,10 +60,10 @@ public class PianoGameManager : MonoBehaviour
             }
         }
     }
-    private void SetWrongCheck()
+    private void SetWrongCheck() 
     {
         checkWrongNote = true;
-    }
+    } 
 
     public void LearnTechnique()
     {

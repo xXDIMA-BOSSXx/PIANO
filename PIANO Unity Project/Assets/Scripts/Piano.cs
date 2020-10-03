@@ -124,7 +124,6 @@ public class Piano : MonoBehaviour
     public int GetRandomNoteIndexBetween(string note1, string note2)
     {
         int i = Random.Range(GetNoteIndex(note1), GetNoteIndex(note2) + 1);
-        Debug.Log(i);
         return i;
     }
 
